@@ -19,9 +19,10 @@ public class AppTest {
         Card diamondSuit = new Card(Card.Suit.DIAMOND, Card.Rank.TWO);
         Card clubSuit = new Card(Card.Suit.CLUB, Card.Rank.TWO);
 
-        assert(spadeSuit.getSuit().getValue() > heartSuit.getSuit().getValue());
-        assert(heartSuit.getSuit().getValue() > diamondSuit.getSuit().getValue());
-        assert(diamondSuit.getSuit().getValue() > clubSuit.getSuit().getValue());
+        // compareTo will return 1 when the left is greater than the right
+        assert(spadeSuit.compareTo(heartSuit) == 1);
+        assert(heartSuit.compareTo(diamondSuit) == 1);
+        assert(diamondSuit.compareTo(clubSuit) == 1);
     }
 
     @Test public void acesAreHigh() {
@@ -29,6 +30,14 @@ public class AppTest {
         Card aceCard = new Card(Card.Suit.SPADE, Card.Rank.ACE);
         Card twoCard = new Card(Card.Suit.SPADE, Card.Rank.TWO);
 
-        assert(aceCard.getRank().getValue() > twoCard.getRank().getValue());
+        assert(aceCard.compareTo(twoCard) == 1);
+    }
+
+    @Test public void compareEqualCards() {
+        App app = new App();
+        Card card1 = new Card(Card.Suit.SPADE, Card.Rank.TWO);
+        Card card2 = new Card(Card.Suit.SPADE, Card.Rank.TWO);
+
+        assert(card1.equals(card2));
     }
 }

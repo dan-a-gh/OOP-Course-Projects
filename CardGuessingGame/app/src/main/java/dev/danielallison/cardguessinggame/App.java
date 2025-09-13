@@ -1,5 +1,8 @@
 package dev.danielallison.cardguessinggame;
-
+/**
+ * As per professor's instructions, everything is to be done in 1 file
+ * App class is where it all happens
+ */
 public class App {
     public String getGreeting() {
         return "Hello World!";
@@ -19,7 +22,17 @@ public class App {
          * Playing cards should not be able to change their suit and rank
          * Static so it can be instantiated without an outer instance
          */
-        public static class Card {
+        public static class Card implements Comparable<Card> {
+            /**
+             * Constructor. Creates a new card.
+             * @param suit The suit of the card.
+             * @param rank The rank of the card.
+             */
+            public Card(Suit suit, Rank rank) {
+                this.suit = suit;
+                this.rank = rank;
+            }
+
             public enum Suit {
                 SPADE(4),
                 HEART(3),
@@ -82,22 +95,43 @@ public class App {
             private final Rank rank;
             private final Suit suit;
 
-            /**
-             * Constructor. Creates a new card.
-             * @param suit The suit of the card.
-             * @param rank The rank of the card.
-             */
-            public Card(Suit suit, Rank rank) {
-                this.suit = suit;
-                this.rank = rank;
-            }
-
             public Suit getSuit() {
                 return this.suit;
             }
 
             public Rank getRank() {
                 return this.rank;
+            }
+
+            /**
+             * Cards can be compared using the compare to method override
+             * @param card A Card to compare to.
+             * @return Returns 1 if this is higher other card, 0 if equal, -1 if this is lower than other card
+             */
+            @Override
+            public int compareTo(Card card) {
+                if (this.suit != card.suit) {
+                    return Integer.compare(this.suit.getValue(), card.suit.getValue());
+                } else if (this.rank != card.rank) {
+                    return Integer.compare(this.rank.getValue(), card.rank.getValue());
+                } else {
+                    return 0;
+                }
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                // Fast‑path: same reference
+                if (this == obj) return true;
+
+                // Guard against null and wrong type
+                if (obj == null || getClass() != obj.getClass()) return false;
+
+                // Safe cast – we now know o is a Card
+                Card other = (Card) obj;
+
+                // Re‑use existing compareTo logic
+                return this.compareTo(other) == 0;
             }
         }
     }
