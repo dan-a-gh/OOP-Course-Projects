@@ -3,11 +3,13 @@
   "dockerComposeFile": "docker-compose.yml",
   "service": "dev",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "postCreateCommand": "mkdir -p ~/.ssh && cp /tmp/ssh-keys/* ~/.ssh && sudo chmod 600 ~/.ssh/* && sudo chmod 700 ~/.ssh && sudo chmod 644 ~/.ssh/*.pub",
   "settings": {
     "java.home": "/usr/lib/jvm/java-17-openjdk-amd64",   // matches the Temurin image
     "terminal.integrated.shell.linux": "/bin/bash"
   },
   "mounts": [
-    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+    "type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/tmp/ssh-keys"
   ]
 }
