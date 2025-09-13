@@ -30,10 +30,12 @@ RUN sudo dnf install -y \
     git \
     which
 
-# Java SDK installers
-RUN curl -s "https://get.sdkman.io" | bash
-RUN source "$HOME/.sdkman/bin/sdkman-init.sh"
-
 # Python installers
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 RUN uv tool install commitizen
+
+# Java SDK installers
+RUN curl -s "https://get.sdkman.io" | bash
+RUN source "$HOME/.sdkman/bin/sdkman-init.sh" && \
+    sdk install gradle && \
+    sdk install java 24.0.2-tem
