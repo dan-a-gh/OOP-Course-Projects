@@ -1,0 +1,10 @@
+services:
+  dev:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    hostname: oop-course-projects-devctr
+    container_name: oop-course-projects-devctr
+    volumes:
+      - ../..:/workspaces:cached
+    command: sleep infinity

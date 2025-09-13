@@ -1,0 +1,13 @@
+{
+  "name": "Eclipse Temurin + Gradle",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "settings": {
+    "java.home": "/usr/lib/jvm/java-17-openjdk-amd64",   // matches the Temurin image
+    "terminal.integrated.shell.linux": "/bin/bash"
+  },
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  ]
+}
