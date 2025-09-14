@@ -138,8 +138,14 @@ public class App {
 
         public static class Deck {
             private List<Card> cards = new ArrayList<>(52);
+            private Random rng;
 
             public Deck() {
+                this(new Random());
+            }
+
+            public Deck(Random rng) {
+                this.rng = Objects.requireNonNull(rng);
                 for (Card.Suit suit : Card.Suit.values()) {
                     for (Card.Rank rank : Card.Rank.values()) {
                         Card tmp = new Card(suit, rank);
@@ -159,6 +165,18 @@ public class App {
              */
             public void shuffle() {
                 Collections.shuffle(cards);
+            }
+
+            /**
+             * Gets a random card from the deck. Does not remove the card from the deck. Requires non-empty deck.
+             * @return Card
+             */
+            public Card getRandomCard() {
+                if (cards.isEmpty()) {
+                    throw new NoSuchElementException("Deck is empty");
+                }
+                int index = rng.nextInt(cards.size());
+                return this.cards.get(index);
             }
         }
     }
