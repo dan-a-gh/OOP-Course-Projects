@@ -1,15 +1,16 @@
 package dev.danielallison.cardguessinggame;
+
+import java.util.*;
+
 /**
  * As per professor's instructions, everything is to be done in 1 file
+ * However this is bad practice and violates the single responsibility principle
  * App class is where it all happens
  */
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        System.out.println("Welcome to cards.");
     }
 
     /**
@@ -132,6 +133,32 @@ public class App {
 
                 // Re‑use existing compareTo logic
                 return this.compareTo(other) == 0;
+            }
+        }
+
+        public static class Deck {
+            private List<Card> cards = new ArrayList<>(52);
+
+            public Deck() {
+                for (Card.Suit suit : Card.Suit.values()) {
+                    for (Card.Rank rank : Card.Rank.values()) {
+                        Card tmp = new Card(suit, rank);
+                        this.cards.add(tmp);
+                    }
+                }
+                // Invariant: exactly 52 distinct cards
+                assert cards.size() == 52;
+            }
+
+            public List<Card> cards() {
+                return Collections.unmodifiableList(cards);
+            }
+
+            /**
+             * Shuffles the cards
+             */
+            public void shuffle() {
+                Collections.shuffle(cards);
             }
         }
     }

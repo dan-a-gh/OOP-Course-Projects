@@ -3,15 +3,13 @@ package dev.danielallison.cardguessinggame;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 import dev.danielallison.cardguessinggame.App;
-import dev.danielallison.cardguessinggame.App.Domain.Card;
+import dev.danielallison.cardguessinggame.App.Domain.*;
 
 public class AppTest {
-    @Test public void appHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull("app should have a greeting", classUnderTest.getGreeting());
-    }
-
     @Test public void cardSuitOrder() {
         App app = new App();
         Card spadeSuit = new Card(Card.Suit.SPADE, Card.Rank.TWO);
@@ -39,5 +37,17 @@ public class AppTest {
         Card card2 = new Card(Card.Suit.SPADE, Card.Rank.TWO);
 
         assert(card1.equals(card2));
+    }
+
+    @Test public void deckContainsExactly52UniqueCards() {
+        App app = new App();
+        Deck deck = new Deck();
+        assertEquals(52, deck.cards().size());
+
+        Set<String> uniq = deck.cards().stream()
+            .map(c -> c.getSuit() + "-" + c.getRank())
+            .collect(Collectors.toSet());
+        
+        assertEquals(52, uniq.size());
     }
 }
