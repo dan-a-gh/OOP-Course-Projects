@@ -236,5 +236,39 @@ public class App {
                 return cards.equals(other.cards);
             }
         }
+
+        public class Player {
+            /**
+             * Use a universally unique identifier to uniquely identify a player
+             */
+            private final UUID id;
+            private final String name;
+            private Hand hand = Hand.empty();
+
+            public Player(String name) {
+                this.id = UUID.randomUUID();
+                this.name = name;
+            }
+
+            public UUID id() { return id; }
+            public String name() { return name; }
+            public Hand hand() { return hand; }
+
+            /**
+             * Recieve a card into this player's hand
+             * @param card A card
+             */
+            public void receive(Card card) {
+                hand = hand.add(card);
+            }
+
+            /** 
+             * Discard a card from this player's hand
+             * @param card A card
+             */
+            public void discard(Card card) {
+                hand = hand.remove(card);
+            }
+        }
     }
 }
