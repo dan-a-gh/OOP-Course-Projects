@@ -199,5 +199,42 @@ public class App {
                 return draw(this.rng.nextInt(cards.size()));
             }
         }
+
+
+        public static class Hand {
+            private List<Card> cards = new ArrayList<>();
+
+            public Hand(List<Card> cards) {
+                this.cards = Collections.unmodifiableList(
+                    Objects.requireNonNull(cards)
+                );
+            }
+
+            public List<Card> cards() { return cards; }
+
+            public static Hand empty() {
+                return new Hand(Collections.emptyList());
+            }
+
+            public Hand add(Card card) {
+                List<Card> newCards = new java.util.ArrayList<>(cards);
+                newCards.add(card);
+                return new Hand(newCards);
+            }
+
+            public Hand remove(Card card) {
+                List<Card> newCards = new ArrayList<>(cards);
+                newCards.remove(card);
+                return new Hand(newCards);
+            }
+
+            @Override
+            public boolean equals(Object o) {
+                if (this == o) return true;
+                if (!(o instanceof Hand)) return false;
+                Hand other = (Hand) o;
+                return cards.equals(other.cards);
+            }
+        }
     }
 }
