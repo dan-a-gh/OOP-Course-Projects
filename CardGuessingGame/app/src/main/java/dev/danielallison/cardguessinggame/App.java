@@ -144,6 +144,10 @@ public class App {
                 this(new Random());
             }
 
+            /**
+             * This constructor method is available when a specific seed for the rng is desired
+             * @param rng A random number generator with Random class
+             */
             public Deck(Random rng) {
                 this.rng = Objects.requireNonNull(rng);
                 for (Card.Suit suit : Card.Suit.values()) {
@@ -161,22 +165,38 @@ public class App {
             }
 
             /**
-             * Shuffles the cards
+             * Shuffles the cards in the deck
              */
             public void shuffle() {
                 Collections.shuffle(cards);
             }
 
             /**
-             * Gets a random card from the deck. Does not remove the card from the deck. Requires non-empty deck.
+             * Draws a card from the deck at specified index. Removes the card from the deck. Requires non-empty deck.
+             * @param index The index determines the position of the card in the deck that will be removed
              * @return Card
              */
-            public Card getRandomCard() {
+            public Card draw(int index) {
                 if (cards.isEmpty()) {
                     throw new NoSuchElementException("Deck is empty");
                 }
-                int index = rng.nextInt(cards.size());
-                return this.cards.get(index);
+                return this.cards.remove(index);
+            }
+
+            /**
+             * Draws a card from the top of the deck, defined as index 0. Removes the card from the deck. Requires non-empty deck.
+             * @return Card
+             */
+            public Card draw() {
+                return this.draw(0);
+            }
+
+            /**
+             * Draw a random card from the deck. Removes the card from the deck. Requires non-empty deck.
+             * @return Card
+             */
+            public Card drawRandom() {
+                return draw(this.rng.nextInt(cards.size()));
             }
         }
     }
