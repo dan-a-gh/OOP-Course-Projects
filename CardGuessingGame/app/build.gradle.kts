@@ -8,6 +8,9 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
+
+    // Code style enforcement
+    id("com.diffplug.spotless") version "7.2.1"
 }
 
 repositories {
@@ -33,4 +36,24 @@ java {
 application {
     // Define the main class for the application.
     mainClass = "dev.danielallison.cardguessinggame.App"
+}
+
+spotless {
+  // optional: limit format enforcement to just the files changed by this feature branch
+  // ratchetFrom 'origin/main'
+
+  java {
+    // don't need to set target, it is inferred from java
+
+    // apply a specific flavor of google-java-format
+    googleJavaFormat("1.17.0").aosp().reflowLongStrings().skipJavadocFormatting()
+    // fix formatting of type annotations
+    formatAnnotations()
+    trimTrailingWhitespace()
+    endWithNewline()
+  }
+}
+
+tasks.named("build") {
+    dependsOn(":app:spotlessApply")
 }
