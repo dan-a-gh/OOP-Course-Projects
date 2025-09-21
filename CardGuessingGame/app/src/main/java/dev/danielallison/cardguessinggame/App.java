@@ -16,7 +16,7 @@ public class App {
     /**
      * The Domain class contains the business logic
      * In this program, it describes playing cards, their operations, and their order according to this game
-     */    
+     */
     public class Domain {
         /**
          * A playing card has a suit and a rank
@@ -58,7 +58,7 @@ public class App {
                     return this.value;
                 }
             }
-            
+
             public enum Rank {
                 TWO(2),
                 THREE(3),
@@ -73,9 +73,9 @@ public class App {
                 QUEEN(12),
                 KING(13),
                 ACE(14);
-                
+
                 private int value;
-                
+
                 /**
                  * Rank constructor. In this game, the rank is represented by an integer
                  * @param value The integer value of the rank. Aces are high.
@@ -200,17 +200,16 @@ public class App {
             }
         }
 
-
         public static class Hand {
             private List<Card> cards = new ArrayList<>();
 
             public Hand(List<Card> cards) {
-                this.cards = Collections.unmodifiableList(
-                    Objects.requireNonNull(cards)
-                );
+                this.cards = Collections.unmodifiableList(Objects.requireNonNull(cards));
             }
 
-            public List<Card> cards() { return cards; }
+            public List<Card> cards() {
+                return cards;
+            }
 
             public static Hand empty() {
                 return new Hand(Collections.emptyList());
@@ -242,6 +241,7 @@ public class App {
              * Use a universally unique identifier to uniquely identify a player
              */
             private final UUID id;
+
             private final String name;
             private Hand hand = Hand.empty();
 
@@ -250,9 +250,17 @@ public class App {
                 this.name = name;
             }
 
-            public UUID id() { return id; }
-            public String name() { return name; }
-            public Hand hand() { return hand; }
+            public UUID id() {
+                return id;
+            }
+
+            public String name() {
+                return name;
+            }
+
+            public Hand hand() {
+                return hand;
+            }
 
             /**
              * Recieve a card into this player's hand
@@ -262,7 +270,7 @@ public class App {
                 hand = hand.add(card);
             }
 
-            /** 
+            /**
              * Discard a card from this player's hand
              * @param card A card
              */
