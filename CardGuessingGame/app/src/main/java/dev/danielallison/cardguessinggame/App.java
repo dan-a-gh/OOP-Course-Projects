@@ -278,5 +278,37 @@ public class App {
                 hand = hand.remove(card);
             }
         }
+
+        /**
+         * GameLobby class gives the opportunity to add new players before starting a Game
+         */
+        public class GameLobby {
+            private UUID id;
+            // Insertion order of players preserved
+            private Map<UUID, Player> players = new LinkedHashMap<>();
+
+            /**
+             * Creates a new game
+             */
+            public GameLobby() {
+                id = UUID.randomUUID();
+            }
+
+            /**
+             * Adds a new player to the lobby
+             * @param player Player to be added
+             */
+            public void addPlayer(Player player) {
+                players.put(player.id(), player);
+            }
+
+            /**
+             * Remove a player from the lobby
+             * @param player Player to be removed
+             */
+            public void removePlayer(Player player) {
+                players.remove(player.id());
+            }
+        }
     }
 }
