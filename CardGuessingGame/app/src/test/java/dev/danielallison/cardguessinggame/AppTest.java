@@ -2,7 +2,7 @@ package dev.danielallison.cardguessinggame;
 
 import static org.junit.Assert.*;
 
-import dev.danielallison.cardguessinggame.App.Domain.*;
+import dev.danielallison.cardguessinggame.Domain.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.junit.Test;
