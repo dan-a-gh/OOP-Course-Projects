@@ -1,11 +1,83 @@
 package dev.danielallison.cardguessinggame;
 
+import java.io.*;
 import java.util.*;
 
 public class App {
 
     public static void main(String[] args) {
-        System.out.println("Welcome to cards.");
+        System.out.println("Welcome to the card guessing game!");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("What is your name?:");
+
+        String player_name = null;
+        try {
+            player_name = br.readLine();
+        } catch (IOException e) {
+            System.err.println("Error reading input: " + e.getMessage());
+            System.exit(1);
+        }
+
+        Domain.Player player = new Domain.Player(player_name);
+
+        while (true) {
+            Domain.Deck deck = new Domain.Deck();
+            player.receive(deck.drawRandom());
+            player.receive(deck.drawRandom());
+
+            System.out.println("You've been dealt two cards. Which is higher? [first/second]:");
+
+            String guess = null;
+            try {
+                guess = br.readLine();
+            } catch (IOException e) {
+                System.err.println("Error reading input: " + e.getMessage());
+                continue;
+            }
+
+            // Validate input. Valid guesses are first and second.
+            if (guess != "first" && guess != "second") {
+                continue;
+            }
+
+            if (guess == "first") {
+                if (player.guess(0) == true) {
+                    System.out.println("Congrats! You guessed correctly!");
+                } else {
+                    System.out.println("You guessed incorrectly.");
+                }
+            } else {
+                // Implicit guess second case
+                if (player.guess(1) == true) {
+                    System.out.println("Congrats! You guessed correctly!");
+                } else {
+                    System.out.println("You guessed incorrectly.");
+                }
+            }
+
+            System.out.println("Let's reveal the cards.");
+            System.out.println(
+                    "First card: "
+                            + player.hand().cards().get(0).getRank()
+                            + "-"
+                            + player.hand().cards().get(0).getSuit());
+            System.out.println(
+                    "Second card: "
+                            + player.hand().cards().get(1).getRank()
+                            + "-"
+                            + player.hand().cards().get(1).getSuit());
+
+            System.out.println("Play again? [yes/no(default)]:");
+            try {
+                String playAgain = br.readLine();
+                if (playAgain != "yes") {
+                    break;
+                }
+            } catch (IOException e) {
+                System.err.println("Error reading input: " + e.getMessage());
+                break;
+            }
+        }
     }
 }
 
@@ -53,6 +125,21 @@ class Domain {
             public int getValue() {
                 return this.value;
             }
+
+            public String getString() {
+                switch (this.value) {
+                    case 4:
+                        return "SPADE";
+                    case 3:
+                        return "HEART";
+                    case 2:
+                        return "DIAMOND";
+                    case 1:
+                        return "CLUB";
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + this.value);
+                }
+            }
         }
 
         public enum Rank {
@@ -87,17 +174,50 @@ class Domain {
             public int getValue() {
                 return this.value;
             }
+
+            public String getString() {
+                switch (this.value) {
+                    case 2:
+                        return "TWO";
+                    case 3:
+                        return "THREE";
+                    case 4:
+                        return "FOUR";
+                    case 5:
+                        return "FIVE";
+                    case 6:
+                        return "SIX";
+                    case 7:
+                        return "SEVEN";
+                    case 8:
+                        return "EIGHT";
+                    case 9:
+                        return "NINE";
+                    case 10:
+                        return "TEN";
+                    case 11:
+                        return "JACK";
+                    case 12:
+                        return "QUEEN";
+                    case 13:
+                        return "KING";
+                    case 14:
+                        return "ACE";
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + this.value);
+                }
+            }
         }
 
         private final Rank rank;
         private final Suit suit;
 
-        public Suit getSuit() {
-            return this.suit;
+        public String getSuit() {
+            return this.suit.getString();
         }
 
-        public Rank getRank() {
-            return this.rank;
+        public String getRank() {
+            return this.rank.getString();
         }
 
         /**
@@ -232,7 +352,7 @@ class Domain {
         }
     }
 
-    public class Player {
+    public static class Player {
         /**
          * Use a universally unique identifier to uniquely identify a player
          */
@@ -273,37 +393,20 @@ class Domain {
         public void discard(Card card) {
             hand = hand.remove(card);
         }
-    }
 
-    /**
-     * GameLobby class gives the opportunity to add new players before starting a Game
-     */
-    public class GameLobby {
-        private UUID id;
-        // Insertion order of players preserved
-        private Map<UUID, Player> players = new LinkedHashMap<>();
-
-        /**
-         * Creates a new game
-         */
-        public GameLobby() {
-            id = UUID.randomUUID();
-        }
-
-        /**
-         * Adds a new player to the lobby
-         * @param player Player to be added
-         */
-        public void addPlayer(Player player) {
-            players.put(player.id(), player);
-        }
-
-        /**
-         * Remove a player from the lobby
-         * @param player Player to be removed
-         */
-        public void removePlayer(Player player) {
-            players.remove(player.id());
+        public boolean guess(int handIndexLargestCard) {
+            Card guessCard = hand.cards().get(handIndexLargestCard);
+            for (Card card : hand.cards()) {
+                int compareResult = guessCard.compareTo(card);
+                // The guess card must always be higher than all others compared to
+                // ie. compareResult < 1 always if their guess was correct
+                if (compareResult < 1) {
+                    // Guess was not correct
+                    return false;
+                }
+            }
+            // If the whole loop goes through, then their guess was correct
+            return true;
         }
     }
 }
