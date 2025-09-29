@@ -6,21 +6,26 @@ import java.util.*;
 public class App {
 
     public static void main(String[] args) {
-        System.out.println("Welcome to the card guessing game!");
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("What is your name?:");
-
-        String player_name = null;
-        try {
-            player_name = br.readLine();
-        } catch (IOException e) {
-            System.err.println("Error reading input: " + e.getMessage());
-            System.exit(1);
-        }
-
-        Domain.Player player = new Domain.Player(player_name);
-
         while (true) {
+            System.out.println("Welcome to the card guessing game!");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("What is your name?:");
+
+            String playerName = null;
+            try {
+                playerName = br.readLine();
+            } catch (IOException e) {
+                System.err.println("Error reading input: " + e.getMessage());
+                System.exit(1);
+            }
+
+            if (playerName == null || playerName.isBlank()) {
+                System.out.println("No name entered - exiting.");
+                System.exit(1);
+            }
+
+            Domain.Player player = new Domain.Player(playerName);
+
             Domain.Deck deck = new Domain.Deck();
             player.receive(deck.drawRandom());
             player.receive(deck.drawRandom());
@@ -32,12 +37,18 @@ public class App {
                 guess = br.readLine();
             } catch (IOException e) {
                 System.err.println("Error reading input: " + e.getMessage());
-                continue;
+                System.exit(1);
+            }
+
+            if (guess == null || guess.isBlank()) {
+                System.out.println("No guess entered - exiting.");
+                System.exit(1);
             }
 
             // Validate input. Valid guesses are first and second.
-            if (guess != "first" && guess != "second") {
-                continue;
+            if (!"first".equalsIgnoreCase(guess) && !"second".equalsIgnoreCase(guess)) {
+                System.out.println("Invalid choice – exiting.");
+                System.exit(1);
             }
 
             if (guess == "first") {
@@ -70,12 +81,13 @@ public class App {
             System.out.println("Play again? [yes/no(default)]:");
             try {
                 String playAgain = br.readLine();
-                if (playAgain != "yes") {
-                    break;
+                if (!"yes".equalsIgnoreCase(playAgain)) {
+                    System.out.println("Thanks for playing!");
+                    System.exit(0); // normal termination
                 }
             } catch (IOException e) {
                 System.err.println("Error reading input: " + e.getMessage());
-                break;
+                System.exit(1);
             }
         }
     }
@@ -397,15 +409,13 @@ class Domain {
         public boolean guess(int handIndexLargestCard) {
             Card guessCard = hand.cards().get(handIndexLargestCard);
             for (Card card : hand.cards()) {
+                if (guessCard == card) continue; // skip comparing with itself
                 int compareResult = guessCard.compareTo(card);
-                // The guess card must always be higher than all others compared to
-                // ie. compareResult < 1 always if their guess was correct
-                if (compareResult < 1) {
-                    // Guess was not correct
+                // guess is wrong if any other card is equal or higher
+                if (compareResult <= 0) {
                     return false;
                 }
             }
-            // If the whole loop goes through, then their guess was correct
             return true;
         }
     }
