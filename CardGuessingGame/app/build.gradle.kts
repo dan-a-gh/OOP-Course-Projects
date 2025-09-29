@@ -57,3 +57,7 @@ spotless {
 tasks.named("build") {
     dependsOn(":app:spotlessApply")
 }
+
+tasks.named<JavaExec>("run") {
+    standardInput = System.`in`
+}

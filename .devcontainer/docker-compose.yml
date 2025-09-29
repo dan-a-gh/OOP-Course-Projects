@@ -3,6 +3,8 @@ services:
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
+    stdin_open: true
+    tty: true
     hostname: oop-course-projects-devctr
     container_name: oop-course-projects-devctr
     volumes:
