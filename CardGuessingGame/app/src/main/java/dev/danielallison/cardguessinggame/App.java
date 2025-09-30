@@ -58,15 +58,15 @@ public class App {
                 System.exit(1);
             }
 
-            if (guess == "first") {
-                if (player.guess(0) == true) {
+            if ("first".equalsIgnoreCase(guess)) {
+                if (player.guess(0)) {
                     System.out.println("Congrats! You guessed correctly!");
                 } else {
                     System.out.println("You guessed incorrectly.");
                 }
             } else {
                 // Implicit guess second case
-                if (player.guess(1) == true) {
+                if (player.guess(1)) {
                     System.out.println("Congrats! You guessed correctly!");
                 } else {
                     System.out.println("You guessed incorrectly.");
