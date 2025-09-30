@@ -38,6 +38,12 @@ application {
     mainClass = "dev.danielallison.cardguessinggame.App"
 }
 
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "dev.danielallison.cardguessinggame.App"
+    }
+}
+
 spotless {
   // optional: limit format enforcement to just the files changed by this feature branch
   // ratchetFrom 'origin/main'
