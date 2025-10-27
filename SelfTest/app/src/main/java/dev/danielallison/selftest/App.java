@@ -9,39 +9,83 @@ public class App {
 }
 
 class Domain {
-    sealed interface Answer permits MultipleChoiceAnswer, YesNoAnswer, NumberAnswer {}
+    interface Answer<T> {
+        public abstract T getValue();
 
-    static final class MultipleChoiceAnswer implements Answer {
+        public abstract Boolean guess(T input);
+    }
+
+    static final class MultipleChoiceAnswer implements Answer<Integer> {
         private final ArrayList<String> options;
-        private final int selectedIndex;
+        private final Integer correctAnswerIndex;
 
-        public MultipleChoiceAnswer(ArrayList<String> options, int selectedIndex) {
+        public MultipleChoiceAnswer(ArrayList<String> options, Integer correctAnswerIndex) {
             this.options = options;
-            this.selectedIndex = selectedIndex;
+            this.correctAnswerIndex = correctAnswerIndex;
+        }
+
+        @Override
+        public Integer getValue() {
+            return this.correctAnswerIndex;
+        }
+
+        @Override
+        public Boolean guess(Integer input) {
+            if (input == this.correctAnswerIndex) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
-    static final class YesNoAnswer implements Answer {
-        private final boolean value;
+    static final class YesNoAnswer implements Answer<Boolean> {
+        private final Boolean value;
 
-        public YesNoAnswer(boolean value) {
+        public YesNoAnswer(Boolean value) {
             this.value = value;
         }
-    }
 
-    static final class NumberAnswer implements Answer {
-        private final double value;
+        @Override
+        public Boolean getValue() {
+            return this.value;
+        }
 
-        public NumberAnswer(double value) {
-            this.value = value;
+        @Override
+        public Boolean guess(Boolean input) {
+            if (input == this.value) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
-    abstract static class QAPair {
+    static final class NumberAnswer implements Answer<Double> {
+        private final Double value;
+
+        public NumberAnswer(Double value) {
+            this.value = value;
+        }
+
+        @Override
+        public Double getValue() {
+            return this.value;
+        }
+
+        @Override
+        public Boolean guess(Double input) {
+            if (input == this.value) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    static class QAPair {
         private String question;
         private Answer answer;
-
-        public abstract boolean guess();
     }
 
     interface TestBankRepository {
