@@ -3,12 +3,51 @@
  */
 package dev.danielallison.selftest;
 
+import java.io.*;
+import java.nio.file.*;
+import java.util.ArrayList;
+
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
+    public static void main(String[] args) {}
+}
+
+class Domain {
+    sealed interface Answer permits MultipleChoiceAnswer, YesNoAnswer, NumberAnswer {}
+
+    static final class MultipleChoiceAnswer implements Answer {
+        private final ArrayList<String> options;
+        private final int selectedIndex;
+
+        public MultipleChoiceAnswer(ArrayList<String> options, int selectedIndex) {
+            this.options = options;
+            this.selectedIndex = selectedIndex;
+        }
     }
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+    static final class YesNoAnswer implements Answer {
+        private final boolean value;
+
+        public YesNoAnswer(boolean value) {
+            this.value = value;
+        }
+    }
+
+    static final class NumberAnswer implements Answer {
+        private final double value;
+
+        public NumberAnswer(double value) {
+            this.value = value;
+        }
+    }
+
+    abstract static class QAPair {
+        private String question;
+        private Answer answer;
+
+        public abstract boolean guess();
+    }
+
+    interface TestBankRepository {
+        ArrayList<QAPair> parsePairs(ArrayList<String> raw);
     }
 }
