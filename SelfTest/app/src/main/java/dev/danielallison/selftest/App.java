@@ -92,3 +92,11 @@ class Domain {
         ArrayList<QAPair> parsePairs(ArrayList<String> raw);
     }
 }
+
+class Infra {
+    static class FileTestBank implements Domain.TestBankRepository {
+        public ArrayList<Domain.QAPair> parsePairs(ArrayList<String> raw) {
+            return new ArrayList();
+        }
+    }
+}
